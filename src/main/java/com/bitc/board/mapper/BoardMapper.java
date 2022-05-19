@@ -29,4 +29,6 @@ public interface BoardMapper {
 
 //    첨부 파일 목록을 가져올 메서드 생성
     List<BoardFileDto> selectBoardFileList(int boardIdx) throws Exception;
+
+    BoardFileDto selectBoardFileInfo(@Param("idx") int idx, @Param("boardIdx") int boardIdx) throws Exception;
 }
