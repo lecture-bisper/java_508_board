@@ -53,11 +53,26 @@ public class BoardController {
         return mv;
     }
 
+    @RequestMapping("/board/bsBoardList.do")
+    public ModelAndView bsOpenBoardList() throws Exception {
+        ModelAndView mv = new ModelAndView("/board/bsBoardList");
+
+        List<BoardDto> dataList = boardService.selectBoardList();
+        mv.addObject("dataList", dataList);
+
+        return mv;
+    }
+
     //    컨트롤러 클래스에서 @RequestMapping 어노테이션을 사용한 메서드의 반환값을 String을 사용하면 view파일을 지정한다는 의미
 //    단순히 글쓰기 페이지를 사용자에게 출력하기 위한 부분
     @RequestMapping("/board/writeBoard.do")
     public String writeBoard() throws Exception {
         return "/board/boardWrite";
+    }
+
+    @RequestMapping("/board/bsWriteBoard.do")
+    public String bsWriteBoard() throws Exception {
+        return "/board/bsBoardWrite";
     }
 
 //    @RequestParam : 클라이언트에서 서버로 요청 시 전달되는 파라미터 데이터를 뜻함
@@ -89,9 +104,27 @@ public class BoardController {
         return "redirect:/board/boardList.do";
     }
 
+    @RequestMapping("/board/bsInsertBoard.do")
+    public String bsInsertBoard(BoardDto board, MultipartHttpServletRequest multiUploadFiles) throws Exception {
+//        클라이언트에서 파일 데이터를 전달하면 해당 파일 데이터를 받기 위해서 MultipartHttpServletRequest 객체를 통해서 파일 데이터를 받아옴
+//        받아온 파일 데이터를 서비스로 전달하여 서비스에서 전달받은 실제 파일 내용을 분석함
+        boardService.insertBoard(board, multiUploadFiles);
+        return "redirect:/board/bsBoardList.do";
+    }
+
     @RequestMapping("/board/boardDetail.do")
     public ModelAndView boardDetail(@RequestParam("boardIdx") int boardIdx) throws Exception {
         ModelAndView mv = new ModelAndView("/board/boardDetail");
+
+        BoardDto board = boardService.selectBoardDetail(boardIdx);
+        mv.addObject("board", board);
+
+        return mv;
+    }
+
+    @RequestMapping("/board/bsBoardDetail.do")
+    public ModelAndView bsBoardDetail(@RequestParam("boardIdx") int boardIdx) throws Exception {
+        ModelAndView mv = new ModelAndView("/board/bsBoardDetail");
 
         BoardDto board = boardService.selectBoardDetail(boardIdx);
         mv.addObject("board", board);
@@ -106,10 +139,22 @@ public class BoardController {
         return "redirect:/board/boardList.do";
     }
 
+    @RequestMapping("/board/bsUpdateBoard.do")
+    public String bsUpdateBoard(BoardDto board) throws Exception {
+        boardService.updateBoard(board);
+        return "redirect:/board/bsBoardList.do";
+    }
+
     @RequestMapping("/board/deleteBoard.do")
     public String deleteBoard(@RequestParam("boardIdx") int boardIdx) throws Exception {
         boardService.deleteBoard(boardIdx);
         return "redirect:/board/boardList.do";
+    }
+
+    @RequestMapping("/board/bsDeleteBoard.do")
+    public String bsDeleteBoard(@RequestParam("boardIdx") int boardIdx) throws Exception {
+        boardService.deleteBoard(boardIdx);
+        return "redirect:/board/bsBoardList.do";
     }
 
 //    파일 다운로드를 구현하기 위해서 매개변수 3가지를 받고 있음
