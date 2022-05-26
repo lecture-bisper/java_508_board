@@ -1,5 +1,6 @@
 package com.bitc.board.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -8,6 +9,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
+
+  @Value("${user.resource.location}")
+  private String userLoc;
+
+  @Value("${user.resource.path}")
+  private String userPath;
 
   @Bean
   public CommonsMultipartResolver multipartResolver() {
@@ -28,5 +35,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //    registry에 여러개의 외부 폴더를 추가할 수 있음
     registry.addResourceHandler("/img/**")
         .addResourceLocations("file:///C:/images/");
+    registry.addResourceHandler(userLoc + "**")
+        .addResourceLocations("file:" + userPath);
   }
 }
