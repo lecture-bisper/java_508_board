@@ -72,4 +72,19 @@ public class LoginController {
   public String loginFail() throws Exception {
     return "login/loginFail";
   }
+
+  @RequestMapping("/view")
+  public ModelAndView viewPage(HttpServletRequest request) throws Exception {
+    ModelAndView mv = new ModelAndView("login/viewPage");
+    HttpSession session = request.getSession();
+
+    UserDto user = new UserDto();
+    user.setUserId((String)session.getAttribute("userId"));
+
+    if (user.getUserId() != null) {
+      mv.addObject("userId", user.getUserId());
+    }
+
+    return mv;
+  }
 }

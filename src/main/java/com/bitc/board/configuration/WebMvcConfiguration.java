@@ -1,9 +1,11 @@
 package com.bitc.board.configuration;
 
+import com.bitc.board.interceptor.LoginCheck;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -37,5 +39,16 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         .addResourceLocations("file:///C:/images/");
     registry.addResourceHandler(userLoc + "**")
         .addResourceLocations("file:" + userPath);
+  }
+
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+//    addPathPatterns() : 인터셉터가 동작될 컨트롤러 지정
+//    excludePathPatterns() : 인터셉터를 제외할 컨트롤러 지정
+    registry.addInterceptor(new LoginCheck())
+        .addPathPatterns("/login/*")
+        .excludePathPatterns("/login/login")
+        .excludePathPatterns("/login/loginCheck")
+        .excludePathPatterns("/login/loginFail");
   }
 }
